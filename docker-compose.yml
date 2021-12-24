@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  react_app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile 
+    container_name: client-react-task-tracker
+    ports:
+      - 3000:3000
+    volumes:
+      - './client:/usr/app'
+      - '/usr/app/node_modules'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  json_server:
+    container_name: task_tracker_json_server
+    image: vimagick/json-server
+    command: -H 0.0.0.0 -p 3000 -w db.json
+    ports:
+      - 5000:3000 
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
